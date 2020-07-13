@@ -91,7 +91,23 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+          <el-table-column prop="categoryId1" label="1级分类" width="80"></el-table-column>
+          <el-table-column prop="categoryId2" label="2级分类" width="80"></el-table-column>
+          <el-table-column prop="categoryId3" label="3级分类" width="80"></el-table-column>
+          <el-table-column prop="spuId" label="SPU_ID" width="80"></el-table-column>
+          <el-table-column prop="skuId" label="SKU_ID" width="80"></el-table-column>
+          <el-table-column prop="orderId" label="订单ID" width="80"></el-table-column>
+          <el-table-column prop="name" label="商品名称" width="80"></el-table-column>
+          <el-table-column prop="price" label="单价" width="80"></el-table-column>
+          <el-table-column prop="num" label="数量" width="80"></el-table-column>
+          <el-table-column prop="money" label="总金额" width="80"></el-table-column>
+          <el-table-column prop="payMoney" label="实付金额" width="80"></el-table-column>
+          <el-table-column prop="image" label="图片地址" width="80"></el-table-column>
+          <el-table-column prop="weight" label="重量" width="80"></el-table-column>
+          <el-table-column prop="postFee" label="运费" width="80"></el-table-column>
+          <el-table-column prop="isReturn" label="是否退货" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

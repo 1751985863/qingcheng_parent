@@ -71,7 +71,13 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+          <el-table-column prop="title" label="活动标题" width="80"></el-table-column>
+          <el-table-column prop="startTime" label="开始时间" width="80"></el-table-column>
+          <el-table-column prop="endTime" label="结束时间" width="80"></el-table-column>
+          <el-table-column prop="status" label="状态" width="80"></el-table-column>
+          <el-table-column prop="content" label="活动内容" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

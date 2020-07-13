@@ -112,10 +112,6 @@ public class OrderLogServiceImpl implements OrderLogService {
             if(searchMap.get("operater")!=null && !"".equals(searchMap.get("operater"))){
                 criteria.andLike("operater","%"+searchMap.get("operater")+"%");
             }
-            // 订单ID
-            if(searchMap.get("orderId")!=null && !"".equals(searchMap.get("orderId"))){
-                criteria.andLike("orderId","%"+searchMap.get("orderId")+"%");
-            }
             // 订单状态
             if(searchMap.get("orderStatus")!=null && !"".equals(searchMap.get("orderStatus"))){
                 criteria.andLike("orderStatus","%"+searchMap.get("orderStatus")+"%");

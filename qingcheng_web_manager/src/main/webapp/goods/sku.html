@@ -97,7 +97,26 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="商品id" width="80"></el-table-column>
+          <el-table-column prop="sn" label="商品条码" width="80"></el-table-column>
+          <el-table-column prop="name" label="SKU名称" width="80"></el-table-column>
+          <el-table-column prop="price" label="价格（分）" width="80"></el-table-column>
+          <el-table-column prop="num" label="库存数量" width="80"></el-table-column>
+          <el-table-column prop="alertNum" label="库存预警数量" width="80"></el-table-column>
+          <el-table-column prop="image" label="商品图片" width="80"></el-table-column>
+          <el-table-column prop="images" label="商品图片列表" width="80"></el-table-column>
+          <el-table-column prop="weight" label="重量（克）" width="80"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="80"></el-table-column>
+          <el-table-column prop="updateTime" label="更新时间" width="80"></el-table-column>
+          <el-table-column prop="spuId" label="SPUID" width="80"></el-table-column>
+          <el-table-column prop="categoryId" label="类目ID" width="80"></el-table-column>
+          <el-table-column prop="categoryName" label="类目名称" width="80"></el-table-column>
+          <el-table-column prop="brandName" label="品牌名称" width="80"></el-table-column>
+          <el-table-column prop="spec" label="规格" width="80"></el-table-column>
+          <el-table-column prop="saleNum" label="销量" width="80"></el-table-column>
+          <el-table-column prop="commentNum" label="评论数" width="80"></el-table-column>
+          <el-table-column prop="status" label="商品状态 1-正常，2-下架，3-删除" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

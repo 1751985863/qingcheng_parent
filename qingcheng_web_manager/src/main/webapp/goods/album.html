@@ -67,7 +67,11 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="编号" width="80"></el-table-column>
+          <el-table-column prop="title" label="相册名称" width="80"></el-table-column>
+          <el-table-column prop="image" label="相册封面" width="80"></el-table-column>
+          <el-table-column prop="imageItems" label="图片列表" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

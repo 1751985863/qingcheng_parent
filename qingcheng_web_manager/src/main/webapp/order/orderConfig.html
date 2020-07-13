@@ -71,7 +71,13 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+          <el-table-column prop="orderTimeout" label="正常订单超时时间（分）" width="80"></el-table-column>
+          <el-table-column prop="seckillTimeout" label="秒杀订单超时时间（分）" width="80"></el-table-column>
+          <el-table-column prop="takeTimeout" label="自动收货（天）" width="80"></el-table-column>
+          <el-table-column prop="serviceTimeout" label="售后期限" width="80"></el-table-column>
+          <el-table-column prop="commentTimeout" label="自动五星好评" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

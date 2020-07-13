@@ -125,10 +125,6 @@ public class PreferentialServiceImpl implements PreferentialService {
             if(searchMap.get("preMoney")!=null ){
                 criteria.andEqualTo("preMoney",searchMap.get("preMoney"));
             }
-            // 品类ID
-            if(searchMap.get("categoryId")!=null ){
-                criteria.andEqualTo("categoryId",searchMap.get("categoryId"));
-            }
 
         }
         return example;

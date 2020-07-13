@@ -58,18 +58,19 @@
 <el-input v-model="searchMap.name" placeholder="名称" class="filter-item" ></el-input></el-form-item>
           <el-form-item label="选项">
 <el-input v-model="searchMap.options" placeholder="选项" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="排序">
-<el-input v-model="searchMap.seq" placeholder="排序" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="模板ID">
-<el-input v-model="searchMap.templateId" placeholder="模板ID" class="filter-item" ></el-input></el-form-item>
 
                 <el-button class="dalfBut" @click="fetchData()">查询</el-button>
                 <el-button type="primary"  class="butT" @click="formVisible=true;pojo={}">新增</el-button>
+                    <el-button type="primary"  onclick="location.href='template.html'"  >模板列表</el-button>
                 </el-form>
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="id" width="80"></el-table-column>
+          <el-table-column prop="name" label="名称" width="200"></el-table-column>
+          <el-table-column prop="options" label="选项" width="600"></el-table-column>
+          <el-table-column prop="seq" label="排序" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">
@@ -130,6 +131,7 @@
 <script src="/js/vue.js"></script>
 <script src="/js/axios.js"></script>
 <script src="/js/elementui.js"></script>
+<script src="/js/util.js"></script>
 <script>
      new Vue({
         el: '#app',
@@ -146,6 +148,7 @@
             }
         },
         created(){
+            this.searchMap={ templateId: getQueryString('id') }
             this.fetchData();
         },
         methods:{

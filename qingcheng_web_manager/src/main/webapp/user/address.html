@@ -79,7 +79,17 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="id" width="80"></el-table-column>
+          <el-table-column prop="username" label="用户名" width="80"></el-table-column>
+          <el-table-column prop="provinceid" label="省" width="80"></el-table-column>
+          <el-table-column prop="cityid" label="市" width="80"></el-table-column>
+          <el-table-column prop="areaid" label="县/区" width="80"></el-table-column>
+          <el-table-column prop="phone" label="电话" width="80"></el-table-column>
+          <el-table-column prop="address" label="详细地址" width="80"></el-table-column>
+          <el-table-column prop="contact" label="联系人" width="80"></el-table-column>
+          <el-table-column prop="isDefault" label="是否是默认 1默认 0否" width="80"></el-table-column>
+          <el-table-column prop="alias" label="别名" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

@@ -113,7 +113,34 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="订单id" width="80"></el-table-column>
+          <el-table-column prop="totalNum" label="数量合计" width="80"></el-table-column>
+          <el-table-column prop="totalMoney" label="金额合计" width="80"></el-table-column>
+          <el-table-column prop="preMoney" label="优惠金额" width="80"></el-table-column>
+          <el-table-column prop="postFee" label="邮费" width="80"></el-table-column>
+          <el-table-column prop="payMoney" label="实付金额" width="80"></el-table-column>
+          <el-table-column prop="payType" label="支付类型，1、在线支付、0 货到付款" width="80"></el-table-column>
+          <el-table-column prop="createTime" label="订单创建时间" width="80"></el-table-column>
+          <el-table-column prop="updateTime" label="订单更新时间" width="80"></el-table-column>
+          <el-table-column prop="payTime" label="付款时间" width="80"></el-table-column>
+          <el-table-column prop="consignTime" label="发货时间" width="80"></el-table-column>
+          <el-table-column prop="endTime" label="交易完成时间" width="80"></el-table-column>
+          <el-table-column prop="closeTime" label="交易关闭时间" width="80"></el-table-column>
+          <el-table-column prop="shippingName" label="物流名称" width="80"></el-table-column>
+          <el-table-column prop="shippingCode" label="物流单号" width="80"></el-table-column>
+          <el-table-column prop="username" label="用户名称" width="80"></el-table-column>
+          <el-table-column prop="buyerMessage" label="买家留言" width="80"></el-table-column>
+          <el-table-column prop="buyerRate" label="是否评价" width="80"></el-table-column>
+          <el-table-column prop="receiverContact" label="收货人" width="80"></el-table-column>
+          <el-table-column prop="receiverMobile" label="收货人手机" width="80"></el-table-column>
+          <el-table-column prop="receiverAddress" label="收货人地址" width="80"></el-table-column>
+          <el-table-column prop="sourceType" label="订单来源：1:web，2：app，3：微信公众号，4：微信小程序  5 H5手机页面" width="80"></el-table-column>
+          <el-table-column prop="transactionId" label="交易流水号" width="80"></el-table-column>
+          <el-table-column prop="orderStatus" label="订单状态" width="80"></el-table-column>
+          <el-table-column prop="payStatus" label="支付状态" width="80"></el-table-column>
+          <el-table-column prop="consignStatus" label="发货状态" width="80"></el-table-column>
+          <el-table-column prop="isDelete" label="是否删除" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

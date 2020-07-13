@@ -93,7 +93,24 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="服务单号" width="80"></el-table-column>
+          <el-table-column prop="orderId" label="订单号" width="80"></el-table-column>
+          <el-table-column prop="applyTime" label="申请时间" width="80"></el-table-column>
+          <el-table-column prop="userId" label="用户ID" width="80"></el-table-column>
+          <el-table-column prop="userAccount" label="用户账号" width="80"></el-table-column>
+          <el-table-column prop="linkman" label="联系人" width="80"></el-table-column>
+          <el-table-column prop="linkmanMobile" label="联系人手机" width="80"></el-table-column>
+          <el-table-column prop="type" label="类型" width="80"></el-table-column>
+          <el-table-column prop="returnMoney" label="退款金额" width="80"></el-table-column>
+          <el-table-column prop="isReturnFreight" label="是否退运费" width="80"></el-table-column>
+          <el-table-column prop="status" label="申请状态" width="80"></el-table-column>
+          <el-table-column prop="disposeTime" label="处理时间" width="80"></el-table-column>
+          <el-table-column prop="returnCause" label="退货退款原因" width="80"></el-table-column>
+          <el-table-column prop="evidence" label="凭证图片" width="80"></el-table-column>
+          <el-table-column prop="description" label="问题描述" width="80"></el-table-column>
+          <el-table-column prop="remark" label="处理备注" width="80"></el-table-column>
+          <el-table-column prop="adminId" label="管理员id" width="80"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">

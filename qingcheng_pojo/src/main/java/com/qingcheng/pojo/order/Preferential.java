@@ -20,7 +20,7 @@ public class Preferential implements Serializable{
 
 	private Integer preMoney;//优惠金额
 
-	private Integer categoryId;//品类ID
+	private Long categoryId;//品类ID
 
 	private java.util.Date startTime;//活动开始日期
 
@@ -52,10 +52,10 @@ public class Preferential implements Serializable{
 		this.preMoney = preMoney;
 	}
 
-	public Integer getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
-	public void setCategoryId(Integer categoryId) {
+	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
