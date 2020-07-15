@@ -56,28 +56,23 @@
                 <el-form :inline="true" >
                           <el-form-item label="相册名称">
 <el-input v-model="searchMap.title" placeholder="相册名称" class="filter-item" ></el-input></el-form-item>
+          <el-form-item label="相册封面">
+<el-input v-model="searchMap.image" placeholder="相册封面" class="filter-item" ></el-input></el-form-item>
+          <el-form-item label="图片列表">
+<el-input v-model="searchMap.imageItems" placeholder="图片列表" class="filter-item" ></el-input></el-form-item>
 
                 <el-button class="dalfBut" @click="fetchData()">查询</el-button>
-                <el-button type="primary"  class="butT" @click="formVisible=true;pojo={};imageUrl=''">新增</el-button>
+                <el-button type="primary"  class="butT" @click="formVisible=true;pojo={}">新增</el-button>
                 </el-form>
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                          <el-table-column prop="id" label="编号" width="80"></el-table-column>
-          <el-table-column prop="title" label="相册名称" width="80"></el-table-column>
-          <el-table-column prop="image" label="相册封面" width="80">
-            <template slot-scope="scope">
-                <img :src="scope.row.image" width="100px" height="50px">
-            </template>
-          </el-table-column>
-        
-
+                <列表内容.txt>
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">
                             <el-button @click="edit(scope.row.id)" size="mini" type="primary" size="small">修改</el-button>
                             <el-button @click="dele(scope.row.id)" size="mini" type="danger" size="small">删除</el-button>
-                            <el-button @click="godetail(scope.row.id)" size="mini" type="danger" size="small">查看</el-button>
                         </template>
                     </el-table-column>
             </el-table>
@@ -97,7 +92,11 @@
                 <!--弹出窗口-->
                 <el-dialog  title="编辑" :visible.sync="formVisible" >
                     <el-form label-width="80px">
-                            <el-form-item label="相册名称"><el-input v-model="pojo.title"></el-input></el-form-item> 
+                                <el-form-item label="相册名称"><el-input v-model="pojo.title"></el-input></el-form-item>
+        <el-form-item label="相册封面"><el-input v-model="pojo.image"></el-input></el-form-item>
+        <el-form-item label="图片列表"><el-input v-model="pojo.imageItems"></el-input></el-form-item>
+
+                            <!-- 图片上传代码 如页面有图片上传功能放开注释 ****
                             <el-form-item label="图片">
                                 <el-upload
                                         class="avatar-uploader"
@@ -109,6 +108,8 @@
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                 </el-upload>
                             </el-form-item>
+                            -->
+
                             <el-form-item>
                                 <el-button type="primary" @click="save()">保存</el-button>
                                 <el-button @click="formVisible = false" >关闭</el-button>
@@ -152,7 +153,7 @@
                 });
             },
             save (){
-                 this.pojo.image= this.imageUrl; //如页面有图片上传功能放开注释
+                // this.pojo.image= this.imageUrl; //如页面有图片上传功能放开注释
                 axios.post(`/album/${this.pojo.id==null?'add':'update'}.do`,this.pojo).then(response => {
                     this.fetchData (); //刷新列表
                     this.formVisible = false ;//关闭窗口
@@ -166,10 +167,6 @@
                     // this.imageUrl=this.pojo.image //显示图片  如页面有图片上传功能放开注释
                 })
             },
-            godetail(id){
-                location.href=`photo.html?id=`+id
-
-            },
             dele (id){
                 this.$confirm('确定要删除此记录吗?', '提示', {
                     confirmButtonText: '确定',
@@ -181,7 +178,7 @@
                     })
                 })
             },
-			
+			/* ****图片上传相关代码  如页面有图片上传功能放开注释 **** 
             handleAvatarSuccess(res, file) {
                 this.imageUrl = file.response;
             },
@@ -196,7 +193,7 @@
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
                 return isJPG && isLt2M;
-            }
+            }*/
         }
     })
 </script>

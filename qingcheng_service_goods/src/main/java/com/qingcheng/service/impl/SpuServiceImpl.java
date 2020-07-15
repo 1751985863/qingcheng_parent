@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.qingcheng.dao.BrandMapper;
-import com.qingcheng.dao.CategoryMapper;
-import com.qingcheng.dao.SkuMapper;
-import com.qingcheng.dao.SpuMapper;
+import com.qingcheng.dao.*;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.pojo.goods.*;
 import com.qingcheng.service.goods.SpuService;
@@ -115,20 +112,27 @@ public class SpuServiceImpl implements SpuService {
     private BrandMapper brandMapper;//注入品牌dao
     @Autowired
     private SkuMapper skuMapper;//注入sku dao
+    @Autowired
+    private CategoryBrandMapper categoryBrandMapper;
     //当多个mapper进行操作时要开启事务
     @Transactional
     public void save(Goods goods) {
         /*增加spu*/
         Spu spu = goods.getSpu();
-        spu.setId(idWorker.nextId()+"");//设置id
-        spu.setSaleNum(0);//设置销量
-        spu.setCommentNum(0);//设置评论数
-        /*初始化spu的一系列状态*/
-        spu.setIsMarketable("0");
-        spu.setIsEnableSpec("0");
-        spu.setIsDelete("0");
-        spu.setStatus("0");
-        spuMapper.insert(spu);
+        if (spu.getId()==null){//新增
+            spu.setId(idWorker.nextId()+"");//设置id
+            spuMapper.insert(spu);
+        }else {//修改
+            //先删除之前的sku列表
+            Example example = new Example(Sku.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("spuId", spu.getId());
+            skuMapper.deleteByExample(example);//删除完毕后再更新操作
+            spuMapper.updateByPrimaryKey(spu);//
+
+        }
+
+
         /*增加sku*/
         Category category = categoryMapper.selectByPrimaryKey(spu.getCategory3Id());//获取三级分类对象
         Brand brand = brandMapper.selectByPrimaryKey(spu.getBrandId());//获取品牌对象
@@ -136,9 +140,14 @@ public class SpuServiceImpl implements SpuService {
         List<Sku> skuList = goods.getSkuList();
         for (Sku sku : skuList) {
             //设置id
-            sku.setId(idWorker.nextId()+"");
-            //设置创建时间
-            sku.setCreateTime(date);
+            if (sku.getId()==null) {//新增
+                sku.setId(idWorker.nextId() + "");
+                sku.setCreateTime(date);
+            }
+            if (sku.getSpec()==null||"".equals(sku.getSpec())){//未启用sku规格的容错处理
+                sku.setSpec("{}");
+            }
+
             //设置更新时间
             sku.setUpdateTime(date);
             //设置spu_id
@@ -162,9 +171,58 @@ public class SpuServiceImpl implements SpuService {
 
             skuMapper.insert(sku);
 
+            //建立品牌和分类的关系
+            CategoryBrand categoryBrand=new CategoryBrand();
+            categoryBrand.setBrandId(spu.getBrandId());
+            categoryBrand.setCategoryId(spu.getCategory3Id());
+            int count = categoryBrandMapper.selectCount(categoryBrand);
+            if (count==0){
+                categoryBrandMapper.insert(categoryBrand);
+            }
+
+
         }
 
 
+    }
+
+    public Goods findGoodsById(String id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        Example example=new Example(Sku.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("spuId",id);
+        List<Sku> skus = skuMapper.selectByExample(example);
+        Goods goods=new Goods();
+        goods.setSkuList(skus);
+        goods.setSpu(spu);
+        return goods;
+    }
+    @Autowired
+    private AuditMapper auditMapper;
+    @Transactional
+    public void audit(String id, String status, String message) {
+        //审核商品
+        Spu spu=new Spu();
+        spu.setId(id);
+        spu.setStatus(status);
+        if (id=="1"){//如果审核通过，则自动上架
+            spu.setIsMarketable("1");
+        }
+        spuMapper.updateByPrimaryKeySelective(spu);
+        //商品审核记录
+        Audit audit=new Audit();
+        audit.setId(idWorker.nextId()+"");
+        audit.setOperator("admin");
+        audit.setStatus(status);
+        if (status=="1"){
+            audit.setMessage("");
+        }else {
+            audit.setMessage(message);
+        }
+        audit.setSpuId(id);
+        audit.setAuditTime(new Date());
+        auditMapper.insert(audit);
+        //商品日志表
     }
 
     /**

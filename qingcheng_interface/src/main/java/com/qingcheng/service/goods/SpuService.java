@@ -32,7 +32,10 @@ public interface SpuService {
 
 
     public void delete(String id);
-    //保存一个商品的spu以及sku列
     public void save(Goods goods);
+
+    public Goods findGoodsById(String id);
+
+    public void audit(String id, String status, String message);
 
 }

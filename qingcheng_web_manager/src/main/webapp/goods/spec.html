@@ -56,21 +56,20 @@
                 <el-form :inline="true" >
                           <el-form-item label="名称">
 <el-input v-model="searchMap.name" placeholder="名称" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="规格选项">
-<el-input v-model="searchMap.options" placeholder="规格选项" class="filter-item" ></el-input></el-form-item>
+          <el-form-item label="选项">
+<el-input v-model="searchMap.options" placeholder="选项" class="filter-item" ></el-input></el-form-item>
+          <el-form-item label="排序">
+<el-input v-model="searchMap.seq" placeholder="排序" class="filter-item" ></el-input></el-form-item>
+          <el-form-item label="模板ID">
+<el-input v-model="searchMap.templateId" placeholder="模板ID" class="filter-item" ></el-input></el-form-item>
 
                 <el-button class="dalfBut" @click="fetchData()">查询</el-button>
-                <el-button type="primary"  class="butT" @click="formVisible=true;pojo={templateId: templateId }">新增</el-button>
-                <el-button type="primary"  onclick="location.href='template.html'"  >模板列表</el-button>
+                <el-button type="primary"  class="butT" @click="formVisible=true;pojo={}">新增</el-button>
                 </el-form>
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-          <el-table-column prop="id" label="ID" width="80"></el-table-column>
-          <el-table-column prop="name" label="名称" width="200"></el-table-column>
-          <el-table-column prop="options" label="规格选项" width="600"></el-table-column>
-          <el-table-column prop="seq" label="排序" width="80"></el-table-column>
-
+                <列表内容.txt>
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">
@@ -96,12 +95,10 @@
                 <el-dialog  title="编辑" :visible.sync="formVisible" >
                     <el-form label-width="80px">
                                 <el-form-item label="名称"><el-input v-model="pojo.name"></el-input></el-form-item>
-        <el-form-item label="规格选项">
-            <el-input v-model="pojo.options" type="textarea"
-                                             :autosize="{ minRows: 2, maxRows: 4}"></el-input>
-
-        </el-form-item>
+        <el-form-item label="选项"><el-input v-model="pojo.options"></el-input></el-form-item>
         <el-form-item label="排序"><el-input v-model="pojo.seq"></el-input></el-form-item>
+        <el-form-item label="模板ID"><el-input v-model="pojo.templateId"></el-input></el-form-item>
+
                             <!-- 图片上传代码 如页面有图片上传功能放开注释 ****
                             <el-form-item label="图片">
                                 <el-upload
@@ -133,7 +130,6 @@
 <script src="/js/vue.js"></script>
 <script src="/js/axios.js"></script>
 <script src="/js/elementui.js"></script>
-<script src="/js/util.js"></script>
 <script>
      new Vue({
         el: '#app',
@@ -146,13 +142,10 @@
                 searchMap: {},
                 pojo: {},
                 formVisible: false,
-                imageUrl: '',
-                templateId: 0
+                imageUrl: ''
             }
         },
         created(){
-            this.templateId= getQueryString('id');
-            this.searchMap={ templateId: getQueryString('id') }
             this.fetchData();
         },
         methods:{
@@ -164,7 +157,6 @@
             },
             save (){
                 // this.pojo.image= this.imageUrl; //如页面有图片上传功能放开注释
-                this.pojo.options= this.pojo.options.replace( /\n/g,","  )
                 axios.post(`/spec/${this.pojo.id==null?'add':'update'}.do`,this.pojo).then(response => {
                     this.fetchData (); //刷新列表
                     this.formVisible = false ;//关闭窗口
@@ -176,7 +168,6 @@
                 axios.get(`/spec/findById.do?id=${id}`).then(response => {
                     this.pojo = response.data;
                     // this.imageUrl=this.pojo.image //显示图片  如页面有图片上传功能放开注释
-                    this.pojo.options =  this.pojo.options.replace(/,/g,"\n")
                 })
             },
             dele (id){

@@ -11,14 +11,14 @@ import java.io.Serializable;
 public class Spec implements Serializable{
 
 	@Id
-	private Integer id;//ID
+	private Integer id;//id
 
 
 	
 
 	private String name;//名称
 
-	private String options;//规格选项
+	private String options;//选项
 
 	private Integer seq;//排序
 

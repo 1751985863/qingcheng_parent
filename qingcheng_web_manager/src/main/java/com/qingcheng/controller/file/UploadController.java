@@ -21,10 +21,7 @@ public class UploadController {
     @PostMapping("/native")
     public String nativeUpload(@RequestParam("file") MultipartFile file) {
         String path=request.getSession().getServletContext().getRealPath("img");
-        String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));//获取文件后缀
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-        String filename=uuid+suffix;
-        String filePath = path +"/"+ uuid+suffix;
+        String filePath = path +"/"+ file.getOriginalFilename();
         File desFile = new File(filePath);
         if(!desFile.getParentFile().exists()){
             desFile.mkdirs();
@@ -35,7 +32,7 @@ public class UploadController {
             e.printStackTrace();
         }
         System.out.println("path:---"+filePath);
-        return "http://localhost:9101/img/"+filename;
+        return "http://localhost:9101/img/"+file.getOriginalFilename();
     }
 
     @Autowired
