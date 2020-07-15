@@ -1,5 +1,6 @@
 package com.qingcheng.service.goods;
 import com.qingcheng.entity.PageResult;
+import com.qingcheng.pojo.goods.Goods;
 import com.qingcheng.pojo.goods.Spu;
 
 import java.util.*;
@@ -31,5 +32,7 @@ public interface SpuService {
 
 
     public void delete(String id);
+    //保存一个商品的spu以及sku列
+    public void save(Goods goods);
 
 }

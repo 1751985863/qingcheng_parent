@@ -1,18 +1,26 @@
 package com.qingcheng.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.qingcheng.dao.BrandMapper;
+import com.qingcheng.dao.CategoryMapper;
+import com.qingcheng.dao.SkuMapper;
 import com.qingcheng.dao.SpuMapper;
 import com.qingcheng.entity.PageResult;
-import com.qingcheng.pojo.goods.Spu;
+import com.qingcheng.pojo.goods.*;
 import com.qingcheng.service.goods.SpuService;
+import com.qingcheng.util.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service(interfaceClass = SpuService.class)//写上这句话才能使得事务生效
 public class SpuServiceImpl implements SpuService {
 
     @Autowired
@@ -93,6 +101,70 @@ public class SpuServiceImpl implements SpuService {
      */
     public void delete(String id) {
         spuMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 保存商品spu以及sku列
+     * @param goods
+     */
+    @Autowired
+    private IdWorker idWorker;//注入雪花算法实例
+    @Autowired
+    private CategoryMapper categoryMapper;//注入分类dao
+    @Autowired
+    private BrandMapper brandMapper;//注入品牌dao
+    @Autowired
+    private SkuMapper skuMapper;//注入sku dao
+    //当多个mapper进行操作时要开启事务
+    @Transactional
+    public void save(Goods goods) {
+        /*增加spu*/
+        Spu spu = goods.getSpu();
+        spu.setId(idWorker.nextId()+"");//设置id
+        spu.setSaleNum(0);//设置销量
+        spu.setCommentNum(0);//设置评论数
+        /*初始化spu的一系列状态*/
+        spu.setIsMarketable("0");
+        spu.setIsEnableSpec("0");
+        spu.setIsDelete("0");
+        spu.setStatus("0");
+        spuMapper.insert(spu);
+        /*增加sku*/
+        Category category = categoryMapper.selectByPrimaryKey(spu.getCategory3Id());//获取三级分类对象
+        Brand brand = brandMapper.selectByPrimaryKey(spu.getBrandId());//获取品牌对象
+        Date date=new Date();//获取现在的时间
+        List<Sku> skuList = goods.getSkuList();
+        for (Sku sku : skuList) {
+            //设置id
+            sku.setId(idWorker.nextId()+"");
+            //设置创建时间
+            sku.setCreateTime(date);
+            //设置更新时间
+            sku.setUpdateTime(date);
+            //设置spu_id
+            sku.setSpuId(spu.getId());
+            //设置分类id、名称
+            sku.setCategoryId(spu.getCategory3Id());
+            sku.setCategoryName(category.getName());
+            //设置品牌相关
+            sku.setBrandName(brand.getName());
+            //设置销量
+            sku.setSaleNum(0);
+            //设置评论数
+            sku.setCommentNum(0);
+            //设置名字
+            Map<String,String> jsonObject = JSON.parseObject(sku.getSpec(),Map.class);//把字符串转化为json,再转化为map
+            String name = spu.getName();//获取spu的名字
+            for (String value : jsonObject.values()) {
+                name+=" "+value;
+            }
+            sku.setName(name);//设置sku的名字
+
+            skuMapper.insert(sku);
+
+        }
+
+
     }
 
     /**
