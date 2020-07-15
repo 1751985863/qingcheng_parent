@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -205,7 +206,7 @@ public class SpuServiceImpl implements SpuService {
         Spu spu=new Spu();
         spu.setId(id);
         spu.setStatus(status);
-        if (id=="1"){//如果审核通过，则自动上架
+        if (status.equals("1")){//如果审核通过，则自动上架
             spu.setIsMarketable("1");
         }
         spuMapper.updateByPrimaryKeySelective(spu);
@@ -214,7 +215,7 @@ public class SpuServiceImpl implements SpuService {
         audit.setId(idWorker.nextId()+"");
         audit.setOperator("admin");
         audit.setStatus(status);
-        if (status=="1"){
+        if (status.equals("1")){
             audit.setMessage("");
         }else {
             audit.setMessage(message);
@@ -223,6 +224,75 @@ public class SpuServiceImpl implements SpuService {
         audit.setAuditTime(new Date());
         auditMapper.insert(audit);
         //商品日志表
+    }
+
+    /**
+     * 商品下架
+     * @param id
+     */
+    public void pull(String id) {
+        Spu spu=new Spu();
+        spu.setId(id);
+        spu.setIsMarketable("0");//设置为下架
+        spuMapper.updateByPrimaryKeySelective(spu);
+        //日志记录
+    }
+
+    /**
+     * 商品上架
+     * @param id
+     */
+    public void push(String id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if (!"1".equals(spu.getStatus())){
+            throw new RuntimeException("审核状态异常，上架失败");
+        }
+        spu.setIsMarketable("1");
+        spuMapper.updateByPrimaryKeySelective(spu);
+
+        //记录日志
+    }
+
+    /**
+     * 批量上架
+     * @param ids
+     * @return
+     */
+    public int pushMany(String[] ids) {
+        Example example=new Example(Spu.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("id", Arrays.asList(ids));
+        criteria.andEqualTo("isMarketable","0");
+        criteria.andEqualTo("status","1");
+        Spu spu=new Spu();
+        spu.setIsMarketable("1");
+        int i = spuMapper.updateByExampleSelective(spu, example);
+        //记录日志
+
+        return i;
+    }
+
+    /**
+     * 逻辑删除
+     * @param id
+     */
+    public void deleteLogical(String id) {
+        Spu spu=new Spu();
+        spu.setId(id);
+        spu.setIsDelete("1");//删除
+        spuMapper.updateByPrimaryKeySelective(spu);
+    }
+
+    /**
+     * 恢复
+     * @param id
+     */
+    public void comeback(String id) {
+        Spu spu=new Spu();
+        spu.setId(id);
+        spu.setIsDelete("0");//恢复
+        spuMapper.updateByPrimaryKeySelective(spu);
+
     }
 
     /**

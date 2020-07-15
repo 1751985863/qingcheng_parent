@@ -38,4 +38,14 @@ public interface SpuService {
 
     public void audit(String id, String status, String message);
 
+    public void pull(String id);
+
+    public void push(String id);
+
+    public int pushMany(String [] ids);
+
+    public void deleteLogical(String id);
+
+    public void comeback(String id);
+
 }

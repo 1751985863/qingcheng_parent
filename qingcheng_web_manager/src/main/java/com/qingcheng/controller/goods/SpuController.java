@@ -66,6 +66,22 @@ public class SpuController {
         return new Result();
     }
 
+    @PostMapping("/audit")
+    public Result audit(@RequestBody Map<String,String> map){
+        spuService.audit(map.get("id"),map.get("status"),map.get("message"));
+        return new Result();
+    }
+
+    @PostMapping("/pushMany")
+    public Result pushMany(@RequestBody String [] ids){
+        for (String id : ids) {
+            System.out.println(id);
+        }
+        int count = spuService.pushMany(ids);
+
+        return new Result(0,"成功上架"+count+"个商品");
+    }
+
 
 
 
