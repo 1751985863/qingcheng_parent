@@ -143,10 +143,14 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus("3");//订单状态 已发货
             order.setConsignStatus("2");//发货状态 已发货
             order.setConsignTime(new Date());
-
+            orderMapper.updateByPrimaryKeySelective(order);
+            /*记录日志暂时不做了，有机会补上*/
         }
 
     }
+
+
+
 
     /**
      * 构建查询条件

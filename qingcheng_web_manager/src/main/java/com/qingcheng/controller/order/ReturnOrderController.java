@@ -60,4 +60,11 @@ public class ReturnOrderController {
         return new Result();
     }
 
+    @GetMapping("/agreeRefund")
+    public Result agreeRefund(String id,Integer money){
+        Integer admin=0;
+        returnOrderService.agreeRefund(id,money,admin);
+        return new Result();
+    }
+
 }

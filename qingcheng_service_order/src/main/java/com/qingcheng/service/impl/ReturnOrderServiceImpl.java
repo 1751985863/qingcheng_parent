@@ -9,6 +9,7 @@ import com.qingcheng.service.order.ReturnOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,36 @@ public class ReturnOrderServiceImpl implements ReturnOrderService {
      */
     public void delete(Long id) {
         returnOrderMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 同意退款
+     * @param id
+     * @param money
+     * @param adminId
+     */
+
+    public void agreeRefund(String id, Integer money, Integer adminId) {
+        ReturnOrder returnOrder = returnOrderMapper.selectByPrimaryKey(id);
+        if (returnOrder==null){
+            throw new RuntimeException("该订单不存在");
+        }
+        if (!returnOrder.getType().equals("2")){
+            throw new RuntimeException("该订单不是退款");
+
+        }
+        if (money>returnOrder.getReturnMoney()||money<=0){
+            throw new RuntimeException("退款金额不合法");
+        }
+        returnOrder.setReturnMoney(money);
+        returnOrder.setStatus("1");//同意
+        returnOrder.setAdminId(adminId);//管理员id
+        returnOrder.setDisposeTime(new Date());//处理退款时间
+        returnOrderMapper.updateByPrimaryKeySelective(returnOrder);//保存
+
+        /*调用支付平台接口*/
+
+
     }
 
     /**
