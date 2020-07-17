@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.entity.Result;
 import com.qingcheng.pojo.order.Order;
+import com.qingcheng.pojo.order.OrderAll;
 import com.qingcheng.service.order.OrderService;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,6 +59,11 @@ public class OrderController {
     public Result delete(String id){
         orderService.delete(id);
         return new Result();
+    }
+
+    @GetMapping("/findOrderAll")
+    public OrderAll findOrderAll(String id){
+        return orderService.findOrderAll(id);
     }
 
 }
