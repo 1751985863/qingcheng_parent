@@ -38,4 +38,6 @@ public interface OrderService {
 
     public List<Order> findListByIds(String [] ids);
 
+    public void batchSend(List<Order> orderList);
+
 }

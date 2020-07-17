@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -126,6 +127,25 @@ public class OrderServiceImpl implements OrderService {
         criteria.andIn("id", Arrays.asList(ids));
         List<Order> orders = orderMapper.selectByExample(example);
         return  orders;
+    }
+
+    /**
+     * 批量发货
+     * @param orderList
+     */
+    public void batchSend(List<Order> orderList) {
+        for (Order order : orderList) {//大坑  如果为空则，必然有问题
+            if (order.getShippingCode()==null||order.getShippingName()==null){
+                throw new RuntimeException("请填写快递单号和快递名称");
+            }
+        }
+        for (Order order : orderList) {
+            order.setOrderStatus("3");//订单状态 已发货
+            order.setConsignStatus("2");//发货状态 已发货
+            order.setConsignTime(new Date());
+
+        }
+
     }
 
     /**

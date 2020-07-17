@@ -6,6 +6,7 @@ import com.qingcheng.entity.Result;
 import com.qingcheng.pojo.order.Order;
 import com.qingcheng.pojo.order.OrderAll;
 import com.qingcheng.service.order.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -65,9 +66,26 @@ public class OrderController {
     public OrderAll findOrderAll(String id){
         return orderService.findOrderAll(id);
     }
+
+    /**
+     * 批量查询
+     * @param ids
+     * @return
+     */
     @PostMapping("/findListByIds")
     public List<Order> findListByIds(@RequestBody String [] ids){
         return orderService.findListByIds(ids);
+    }
+
+    /**
+     * 批量发货
+     * @param orderList
+     * @return
+     */
+    @PostMapping("/batchSend")
+    public Result batchSend(@RequestBody List<Order> orderList){
+        orderService.batchSend(orderList);
+        return new Result();
     }
 
 
