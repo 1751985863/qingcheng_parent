@@ -65,5 +65,10 @@ public class OrderController {
     public OrderAll findOrderAll(String id){
         return orderService.findOrderAll(id);
     }
+    @PostMapping("/findListByIds")
+    public List<Order> findListByIds(@RequestBody String [] ids){
+        return orderService.findListByIds(ids);
+    }
+
 
 }

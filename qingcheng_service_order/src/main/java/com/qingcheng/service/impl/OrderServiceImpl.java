@@ -12,6 +12,7 @@ import com.qingcheng.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -112,6 +113,19 @@ public class OrderServiceImpl implements OrderService {
         orderAll.setOrderItemList(orderItems);
         return orderAll;
 
+    }
+
+    /**
+     * 根据ids数组批量查询 order信息
+     * @param ids
+     * @return
+     */
+    public List<Order> findListByIds(String [] ids){
+        Example example=new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("id", Arrays.asList(ids));
+        List<Order> orders = orderMapper.selectByExample(example);
+        return  orders;
     }
 
     /**

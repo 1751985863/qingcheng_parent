@@ -36,4 +36,6 @@ public interface OrderService {
 
     public OrderAll findOrderAll(String id);
 
+    public List<Order> findListByIds(String [] ids);
+
 }
