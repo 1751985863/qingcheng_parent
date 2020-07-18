@@ -2,22 +2,24 @@ package com.qingcheng.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.qingcheng.dao.OrderConfigMapper;
 import com.qingcheng.dao.OrderItemMapper;
+import com.qingcheng.dao.OrderLogMapper;
 import com.qingcheng.dao.OrderMapper;
 import com.qingcheng.entity.PageResult;
-import com.qingcheng.pojo.order.Order;
-import com.qingcheng.pojo.order.OrderAll;
-import com.qingcheng.pojo.order.OrderItem;
+import com.qingcheng.pojo.order.*;
 import com.qingcheng.service.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service(interfaceClass = OrderService.class)
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -149,7 +151,75 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Autowired
+    private OrderConfigMapper orderConfigMapper;//注入定时任务配置dao
 
+    private OrderLogMapper orderLogMapper;
+
+    public void orderTimeOutLogic() {
+        OrderConfig orderConfig = orderConfigMapper.selectByPrimaryKey(1);
+
+        Integer orderTimeout = orderConfig.getOrderTimeout();//获取过期时间
+        LocalDateTime localDateTime = LocalDateTime.now().minusMinutes(orderTimeout);//获得超过时间点
+        Example example=new Example(Order.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLessThan("createTime",localDateTime);//超时了
+        criteria.andEqualTo("orderStatus","0");//未付款的
+        criteria.andEqualTo("isDelete","0");//未删除的
+        List<Order> orders = orderMapper.selectByExample(example);
+        for (Order order : orders) {
+            OrderLog orderLog=new OrderLog();
+            orderLog.setOperater("system");// 系统
+            orderLog.setOperateTime(new Date());//当前日期
+            orderLog.setOrderStatus("4");
+            orderLog.setPayStatus(order.getPayStatus());
+            orderLog.setConsignStatus(order.getConsignStatus());
+            orderLog.setRemarks("超时订单，系统自动关闭");
+            orderLog.setOrderId(Long.valueOf(order.getId()));
+            orderLogMapper.insert(orderLog);
+            order.setOrderStatus("4");
+            order.setCloseTime(new Date());//关闭日期
+            orderMapper.updateByPrimaryKeySelective(order);
+        }
+
+
+    }
+
+    /**
+     * 订单合并
+     * @param orderId1
+     * @param orderId2
+     */
+    @Override
+    @Transactional
+    public void merge(String orderId1, String orderId2) {
+
+        Order order1 = orderMapper.selectByPrimaryKey(orderId1);
+        Order order2 = orderMapper.selectByPrimaryKey(orderId2);
+        if (order1==null||order2==null){
+            throw new RuntimeException("合并对象不存在");
+        }
+        //把从订单，订单详情的orderId改为主订单的id。(订单详情合并)
+        Example example=new Example(OrderItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("orderId",order2.getId());
+        List<OrderItem> orderItems = orderItemMapper.selectByExample(example);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setOrderId(orderId1);//转移
+            orderItemMapper.updateByPrimaryKeySelective(orderItem);//保存
+        }
+        //订单概要表合并
+        order1.setTotalNum(order1.getTotalNum()+order2.getTotalNum());//合并数量
+        order1.setTotalMoney(order1.getTotalMoney()+order2.getTotalMoney());//合并总价钱
+        order1.setPayMoney(order1.getPayMoney()+order2.getPayMoney());//合并支付价格
+        order1.setPreMoney(order1.getPreMoney()+order2.getPreMoney());//合并预支付价格
+        orderMapper.updateByPrimaryKeySelective(order1);//保存主订单
+        order2.setIsDelete("1");//将从订单逻辑删除
+        orderMapper.updateByPrimaryKeySelective(order2);//保存从订单
+        //记录日志
+
+
+    }
 
 
     /**

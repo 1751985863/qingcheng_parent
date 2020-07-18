@@ -40,5 +40,9 @@ public interface OrderService {
 
     public void batchSend(List<Order> orderList);
 
+    public void orderTimeOutLogic();
+
+    public void merge(String orderId1,String orderId2);
+
 
 }

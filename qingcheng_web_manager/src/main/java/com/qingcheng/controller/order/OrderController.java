@@ -88,6 +88,13 @@ public class OrderController {
         return new Result();
     }
 
+    @GetMapping("/merge")
+    public Result merge(String orderId1,String orderId2){
+        orderService.merge(orderId1,orderId2);
+        return new Result();
+
+    }
+
 
 
 
