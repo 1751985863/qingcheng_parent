@@ -7,6 +7,7 @@ import com.qingcheng.pojo.order.Order;
 import com.qingcheng.pojo.order.OrderAll;
 import com.qingcheng.service.order.OrderService;
 import org.aspectj.weaver.ast.Or;
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -91,6 +92,16 @@ public class OrderController {
     @GetMapping("/merge")
     public Result merge(String orderId1,String orderId2){
         orderService.merge(orderId1,orderId2);
+        return new Result();
+
+    }
+
+    @PostMapping("/distribute")
+    public Result distribute( @RequestBody List<Map> maps){
+     //   List<List<Integer>> lists=new ArrayList<List<Integer>>();
+        for (Map map : maps) {
+            System.out.println(map.values());
+        }
         return new Result();
 
     }
