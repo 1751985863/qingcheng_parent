@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class CategoryReportServiceImpl implements CategoryReportService {
 
@@ -18,5 +20,22 @@ public class CategoryReportServiceImpl implements CategoryReportService {
     public List<CategoryReport> categoryReport(LocalDate date) {
 
         return categoryReportMapper.categoryReport(date);
+    }
+
+    @Override
+    public void createData() {
+
+        //查询昨天的数据，类目统计数据
+        LocalDate date=LocalDate.now().minusDays(1);
+        List<CategoryReport> categoryReports = categoryReportMapper.categoryReport(date);
+        //保存到tb_category_report
+        for (CategoryReport categoryReport : categoryReports) {
+            categoryReportMapper.insert(categoryReport);
+        }
+    }
+
+    @Override
+    public List<Map> category1Count(String date1, String date2) {
+        return categoryReportMapper.category1Count(date1,date2);
     }
 }
