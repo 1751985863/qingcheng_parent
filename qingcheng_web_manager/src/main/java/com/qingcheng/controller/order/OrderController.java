@@ -4,10 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.entity.Result;
 import com.qingcheng.pojo.order.Order;
-import com.qingcheng.pojo.order.OrderAll;
 import com.qingcheng.service.order.OrderService;
-import org.aspectj.weaver.ast.Or;
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -62,52 +59,5 @@ public class OrderController {
         orderService.delete(id);
         return new Result();
     }
-
-    @GetMapping("/findOrderAll")
-    public OrderAll findOrderAll(String id){
-        return orderService.findOrderAll(id);
-    }
-
-    /**
-     * 批量查询
-     * @param ids
-     * @return
-     */
-    @PostMapping("/findListByIds")
-    public List<Order> findListByIds(@RequestBody String [] ids){
-        return orderService.findListByIds(ids);
-    }
-
-    /**
-     * 批量发货
-     * @param orderList
-     * @return
-     */
-    @PostMapping("/batchSend")
-    public Result batchSend(@RequestBody List<Order> orderList){
-        orderService.batchSend(orderList);
-        return new Result();
-    }
-
-    @GetMapping("/merge")
-    public Result merge(String orderId1,String orderId2){
-        orderService.merge(orderId1,orderId2);
-        return new Result();
-
-    }
-
-    @PostMapping("/distribute")
-    public Result distribute( @RequestBody List<Map> maps){
-     //   List<List<Integer>> lists=new ArrayList<List<Integer>>();
-        for (Map map : maps) {
-            System.out.println(map.values());
-        }
-        return new Result();
-
-    }
-
-
-
-
 
 }

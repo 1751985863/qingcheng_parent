@@ -60,29 +60,42 @@ public class SpuController {
         spuService.delete(id);
         return new Result();
     }
+
     @PostMapping("/save")
-    public Result save(@RequestBody Goods goods){
-        spuService.save(goods);
+    public Result save( @RequestBody Goods goods){
+        spuService.saveGoods(goods);
         return new Result();
     }
+
+    @GetMapping("/findGoodsById")
+    public Goods findGoodsById(String id){
+        return spuService.findGoodsById(id);
+    }
+
 
     @PostMapping("/audit")
-    public Result audit(@RequestBody Map<String,String> map){
-        spuService.audit(map.get("id"),map.get("status"),map.get("message"));
+    public Result audit( @RequestBody Map<String,String> map ){
+        spuService.audit( map.get("id"),map.get("status"),map.get("message")  );
         return new Result();
     }
 
-    @PostMapping("/pushMany")
-    public Result pushMany(@RequestBody String [] ids){
-        for (String id : ids) {
-            System.out.println(id);
-        }
-        int count = spuService.pushMany(ids);
-
-        return new Result(0,"成功上架"+count+"个商品");
+    @GetMapping("/pull")
+    public Result pull(String id){
+        spuService.pull(id);
+        return new Result();
     }
 
+    @GetMapping("/put")
+    public Result put(String id){
+        spuService.put(id);
+        return new Result();
+    }
 
+    @GetMapping("/putMany")
+    public Result putMany(String [] ids){
+        int count = spuService.putMany(ids);
+        return new Result(0,"上架"+count+"个商品");
+    }
 
 
 }

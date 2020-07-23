@@ -56,12 +56,10 @@
                 <el-form :inline="true" >
                           <el-form-item label="品牌名称">
 <el-input v-model="searchMap.name" placeholder="品牌名称" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="品牌图片地址">
-<el-input v-model="searchMap.image" placeholder="品牌图片地址" class="filter-item" ></el-input></el-form-item>
+
           <el-form-item label="品牌的首字母">
 <el-input v-model="searchMap.letter" placeholder="品牌的首字母" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="排序">
-<el-input v-model="searchMap.seq" placeholder="排序" class="filter-item" ></el-input></el-form-item>
+
 
                 <el-button class="dalfBut" @click="fetchData()">查询</el-button>
                 <el-button type="primary"  class="butT" @click="formVisible=true;pojo={}">新增</el-button>
@@ -69,7 +67,17 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="品牌id" width="100"></el-table-column>
+          <el-table-column prop="name" label="品牌名称" width="300"></el-table-column>
+          <el-table-column label="品牌图片" width="200">
+              <template slot-scope="scope">
+                  <img :src="scope.row.image" width="100px" height="50px">
+              </template>
+
+          </el-table-column>
+          <el-table-column prop="letter" label="品牌的首字母" width="100"></el-table-column>
+          <el-table-column prop="seq" label="排序" width="100"></el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">
@@ -95,22 +103,24 @@
                 <el-dialog  title="编辑" :visible.sync="formVisible" >
                     <el-form label-width="80px">
                                 <el-form-item label="品牌名称"><el-input v-model="pojo.name"></el-input></el-form-item>
-        <el-form-item label="品牌图片地址"><el-input v-model="pojo.image"></el-input></el-form-item>
+
+                        <el-form-item label="品牌图片">
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action="/upload/native.do"
+                                    :show-file-list="false"
+                                    :on-success="handleAvatarSuccess"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </el-form-item>
+
         <el-form-item label="品牌的首字母"><el-input v-model="pojo.letter"></el-input></el-form-item>
         <el-form-item label="排序"><el-input v-model="pojo.seq"></el-input></el-form-item>
 
                             <!-- 图片上传代码 如页面有图片上传功能放开注释 ****
-                            <el-form-item label="图片">
-                                <el-upload
-                                        class="avatar-uploader"
-                                        action="/upload/native.do"
-                                        :show-file-list="false"
-                                        :on-success="handleAvatarSuccess"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                </el-upload>
-                            </el-form-item>
+
                             -->
 
                             <el-form-item>
@@ -156,7 +166,7 @@
                 });
             },
             save (){
-                // this.pojo.image= this.imageUrl; //如页面有图片上传功能放开注释
+                this.pojo.image= this.imageUrl; //如页面有图片上传功能放开注释
                 axios.post(`/brand/${this.pojo.id==null?'add':'update'}.do`,this.pojo).then(response => {
                     this.fetchData (); //刷新列表
                     this.formVisible = false ;//关闭窗口
@@ -167,7 +177,7 @@
                 // 调用查询
                 axios.get(`/brand/findById.do?id=${id}`).then(response => {
                     this.pojo = response.data;
-                    // this.imageUrl=this.pojo.image //显示图片  如页面有图片上传功能放开注释
+                    this.imageUrl=this.pojo.image //显示图片  如页面有图片上传功能放开注释
                 })
             },
             dele (id){
@@ -181,7 +191,7 @@
                     })
                 })
             },
-			/* ****图片上传相关代码  如页面有图片上传功能放开注释 **** 
+
             handleAvatarSuccess(res, file) {
                 this.imageUrl = file.response;
             },
@@ -196,7 +206,7 @@
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
                 return isJPG && isLt2M;
-            }*/
+            }
         }
     })
 </script>

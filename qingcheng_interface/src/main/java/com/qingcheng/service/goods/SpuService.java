@@ -32,20 +32,19 @@ public interface SpuService {
 
 
     public void delete(String id);
-    public void save(Goods goods);
+
+
+    public void saveGoods(Goods goods);
 
     public Goods findGoodsById(String id);
 
-    public void audit(String id, String status, String message);
+
+    public void audit(String id,String status,String message);
+
 
     public void pull(String id);
 
-    public void push(String id);
+    public void put(String id);
 
-    public int pushMany(String [] ids);
-
-    public void deleteLogical(String id);
-
-    public void comeback(String id);
-
+    public int putMany(String [] ids );
 }

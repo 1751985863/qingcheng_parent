@@ -1,7 +1,6 @@
 package com.qingcheng.service.order;
 import com.qingcheng.entity.PageResult;
 import com.qingcheng.pojo.order.Order;
-import com.qingcheng.pojo.order.OrderAll;
 
 import java.util.*;
 
@@ -32,17 +31,5 @@ public interface OrderService {
 
 
     public void delete(String id);
-
-
-    public OrderAll findOrderAll(String id);
-
-    public List<Order> findListByIds(String [] ids);
-
-    public void batchSend(List<Order> orderList);
-
-    public void orderTimeOutLogic();
-
-    public void merge(String orderId1,String orderId2);
-
 
 }

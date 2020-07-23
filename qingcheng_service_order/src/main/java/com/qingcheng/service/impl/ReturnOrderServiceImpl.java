@@ -2,18 +2,13 @@ package com.qingcheng.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.qingcheng.dao.OrderItemMapper;
-import com.qingcheng.dao.ReturnOrderItemMapper;
 import com.qingcheng.dao.ReturnOrderMapper;
 import com.qingcheng.entity.PageResult;
-import com.qingcheng.pojo.order.OrderItem;
 import com.qingcheng.pojo.order.ReturnOrder;
-import com.qingcheng.pojo.order.ReturnOrderItem;
 import com.qingcheng.service.order.ReturnOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -98,78 +93,6 @@ public class ReturnOrderServiceImpl implements ReturnOrderService {
      */
     public void delete(Long id) {
         returnOrderMapper.deleteByPrimaryKey(id);
-    }
-
-    /**
-     * 同意退款
-     * @param id
-     * @param money
-     * @param adminId
-     */
-
-    public void agreeRefund(String id, Integer money, Integer adminId) {
-        ReturnOrder returnOrder = returnOrderMapper.selectByPrimaryKey(id);
-        if (returnOrder==null){
-            throw new RuntimeException("该订单不存在");
-        }
-        if (!returnOrder.getType().equals("2")){
-            throw new RuntimeException("该订单不是退款");
-
-        }
-        if (money>returnOrder.getReturnMoney()||money<=0){
-            throw new RuntimeException("退款金额不合法");
-        }
-        returnOrder.setReturnMoney(money);
-        returnOrder.setStatus("1");//同意
-        returnOrder.setAdminId(adminId);//管理员id
-        returnOrder.setDisposeTime(new Date());//处理退款时间
-        returnOrderMapper.updateByPrimaryKeySelective(returnOrder);//保存
-
-        /*调用支付平台接口*/
-
-
-    }
-    @Autowired
-    private ReturnOrderItemMapper returnOrderItemMapper;
-    @Autowired
-    private OrderItemMapper orderItemMapper;
-
-    /**
-     * 拒绝退款
-     * @param id
-     * @param remark
-     * @param adminId
-     */
-    public void rejectRefund(String id, String remark, Integer adminId) {
-        ReturnOrder returnOrder = returnOrderMapper.selectByPrimaryKey(id);//先查退款记录表单
-        if (returnOrder==null){
-            throw new RuntimeException("订单为空");
-        }
-        if (!returnOrder.getType().equals("2")){
-            throw new RuntimeException("该订单不是退款");
-
-        }
-        if (remark.length()<5){
-            throw new RuntimeException("请输入驳回理由");
-        }
-        returnOrder.setRemark(remark);//输入驳回理由
-        returnOrder.setStatus("2");//驳回状态为2
-        returnOrder.setAdminId(adminId);
-        returnOrder.setDisposeTime(new Date());//处理时间
-        returnOrderMapper.updateByPrimaryKeySelective(returnOrder);//保存
-
-        //修改对应的订单明细的退款状态为未申请
-        Example example=new Example(ReturnOrderItem.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("returnOrderId",id);
-        List<ReturnOrderItem> returnOrderItems = returnOrderItemMapper.selectByExample(example);//获取退款明细
-        for (ReturnOrderItem returnOrderItem : returnOrderItems) {
-            OrderItem orderItem=new OrderItem();//创建一个订单明细
-            orderItem.setId(String.valueOf(returnOrderItem.getOrderItemId()));
-            orderItem.setIsReturn("0");
-            orderItemMapper.updateByPrimaryKeySelective(orderItem);//保存
-        }
-
     }
 
     /**

@@ -60,18 +60,4 @@ public class ReturnOrderController {
         return new Result();
     }
 
-    @GetMapping("/agreeRefund")
-    public Result agreeRefund(String id,Integer money){
-        Integer admin=0;
-        returnOrderService.agreeRefund(id,money,admin);
-        return new Result();
-    }
-    @PostMapping("/rejectRefund")
-    public Result rejectRefund(@RequestBody Map<String,Object> map){
-        String id = (String) map.get("id");
-        String remark = (String) map.get("remark");
-        returnOrderService.rejectRefund(id,remark,0);
-        return new Result();
-    }
-
 }

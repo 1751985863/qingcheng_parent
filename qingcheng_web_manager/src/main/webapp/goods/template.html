@@ -41,7 +41,7 @@
 <div id="app">
 
     <div class="content-header">
-        <h1>管理<small>template管理</small></h1>
+        <h1>管理<small>规格参数管理</small></h1>
         <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>管理</el-breadcrumb-item>
@@ -56,10 +56,6 @@
                 <el-form :inline="true" >
                           <el-form-item label="模板名称">
 <el-input v-model="searchMap.name" placeholder="模板名称" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="规格数量">
-<el-input v-model="searchMap.specNum" placeholder="规格数量" class="filter-item" ></el-input></el-form-item>
-          <el-form-item label="参数数量">
-<el-input v-model="searchMap.paraNum" placeholder="参数数量" class="filter-item" ></el-input></el-form-item>
 
                 <el-button class="dalfBut" @click="fetchData()">查询</el-button>
                 <el-button type="primary"  class="butT" @click="formVisible=true;pojo={}">新增</el-button>
@@ -67,7 +63,18 @@
             </div>
 
             <el-table :data="tableData" border style="width: 100%">
-                <列表内容.txt>
+                          <el-table-column prop="id" label="ID" width="80"></el-table-column>
+          <el-table-column prop="name" label="模板名称" width="400"></el-table-column>
+          <el-table-column prop="specNum" label="规格数量" width="80"></el-table-column>
+          <el-table-column prop="paraNum" label="参数数量" width="80"></el-table-column>
+                <el-table-column
+                        label="设置"  >
+                    <template slot-scope="scope">
+                        <el-button @click="goSpec(scope.row.id)" size="mini" type="primary" size="small">规格列表</el-button>
+                        <el-button @click="goPara(scope.row.id)" size="mini" type="primary" size="small">参数列表</el-button>
+                    </template>
+                </el-table-column>
+
                     <el-table-column
                             label="操作"  >
                         <template slot-scope="scope">
@@ -93,8 +100,6 @@
                 <el-dialog  title="编辑" :visible.sync="formVisible" >
                     <el-form label-width="80px">
                                 <el-form-item label="模板名称"><el-input v-model="pojo.name"></el-input></el-form-item>
-        <el-form-item label="规格数量"><el-input v-model="pojo.specNum"></el-input></el-form-item>
-        <el-form-item label="参数数量"><el-input v-model="pojo.paraNum"></el-input></el-form-item>
 
                             <!-- 图片上传代码 如页面有图片上传功能放开注释 ****
                             <el-form-item label="图片">
@@ -178,6 +183,12 @@
                     })
                 })
             },
+            goSpec(id){
+                location.href=`spec.html?id=`+id
+            },
+            goPara(id){
+                location.href=`para.html?id=`+id
+            }
 			/* ****图片上传相关代码  如页面有图片上传功能放开注释 **** 
             handleAvatarSuccess(res, file) {
                 this.imageUrl = file.response;
